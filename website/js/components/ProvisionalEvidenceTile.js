@@ -4,6 +4,8 @@ import React from 'react';
 import {Table} from "react-bootstrap";
 import * as _ from 'lodash';
 import classNames from "classnames";
+var KeyInline = require('./KeyInline');
+const slugify = require('../slugify');
 import CollapsibleTile from "./collapsible/CollapsibleTile";
 import CollapsibleSection from "./collapsible/CollapsibleSection";
 
@@ -37,7 +39,10 @@ export default class ProvisionalEvidenceTile extends React.Component {
             });
             return (
                 <tr key={prop} className={rowClasses}>
-                    <td>{title}</td>
+                    <KeyInline tableKey={title} noHelpLink={false}
+                        tooltip={this.props.tooltips && this.props.tooltips[slugify(prop)]}
+                        onClick={(event) => this.props.showHelp(event, prop)}
+                    />
                     <td><span className={"row-value" }>{rowItem}</span></td>
                 </tr>
             );

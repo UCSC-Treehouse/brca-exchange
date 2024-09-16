@@ -975,6 +975,7 @@ var VariantDetail = React.createClass({
                         showHelp={this.showHelp}
                         variant={variant}
                         innerGroups={innerGroups}
+                        tooltips={this.state.tooltips}
                     />
 
                 );
