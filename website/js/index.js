@@ -970,6 +970,7 @@ var VariantDetail = React.createClass({
                     <ProvisionalEvidenceTile
                         groupTitle={groupTitle}
                         onChangeGroupVisibility={this.onChangeGroupVisibility}
+                        hideEmptyItems={this.state.hideEmptyItems}
                         relayoutGrid={this.relayoutGrid}
                         helpSection="acmg-variant-evidence-codes-provisional-assignment"
                         showHelp={this.showHelp}

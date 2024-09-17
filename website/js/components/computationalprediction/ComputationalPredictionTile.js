@@ -112,7 +112,7 @@ export default class ComputationalPredictionTile extends React.Component {
         let sections = _.map(['varType', 'varLoc', 'BayesDel', 'SpliceAI'], (group) => {
 
             if (group === 'varType') {
-                const varType = variant.priors? variant.priors[group] : '' ;  // variant.priors might be null
+                const varType = variant.priors ? variant.priors[group] : '' ;  // variant.priors might be null
                 return ( <CollapsibleSection
                         fieldName={group}
                         computationalPrediction={true}

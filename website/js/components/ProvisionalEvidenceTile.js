@@ -27,15 +27,18 @@ export default class ProvisionalEvidenceTile extends React.Component {
     // generate table rows to be displayed in that group's section
     // retrieving the requested prop values from the variant
     // and applying the corresponding help tooltips
-    getRowsAndDetermineIfEmpty(source, data, variant) {
+    getRowsAndDetermineIfEmpty(source, data, variant, emptyTracker) {
         const rows = _.map(data, (rowDescriptor) => {
             //let {prop, title, noHelpLink} = rowDescriptor;
             let {prop, title} = rowDescriptor;
 
             const rowItem = util.getFormattedFieldByProp(prop, variant);
+            const isEmptyValue = util.isEmptyField(rowItem);
+            if (!isEmptyValue) { // We found a nonempty value - update trackEmptyRows
+                emptyTracker.allEmpty = false ;
+            }
             let rowClasses = classNames({
-                'variantfield-empty': false, // placeholder until this supports hiding when empty
-                // 'variantfield-empty': (isEmptyValue && this.props.hideEmptyItems),
+                'variantfield-empty': (isEmptyValue && this.props.hideEmptyItems),
             });
             return (
                 <tr key={prop} className={rowClasses}>
@@ -52,13 +55,15 @@ export default class ProvisionalEvidenceTile extends React.Component {
 
     render() {
         const {variant, innerGroups} = this.props;
-        let allEmpty = true;
+        // start with the assumption all rows are empty and set to false if we find a non-empty row
+        // use an object instead of plain bool so we can set it directly when passed into getRowsAndDetermineIfEmpty
+        let trackEmptyRows = { allEmpty: true };
 
         // innerGroup are: Population Frequency, Computational Prediction
         let sections = _.map(innerGroups, (group) => {
             let groupSource = group.source;
             let groupData = group.data;
-            let renderedRows = this.getRowsAndDetermineIfEmpty(groupSource, groupData, variant);
+            let renderedRows = this.getRowsAndDetermineIfEmpty(groupSource, groupData, variant, trackEmptyRows);
 
             // TEMPORARY - hide ComputationalPrediction subsection until data is populated
             if (groupSource === "Computational Prediction") {
@@ -90,7 +95,7 @@ export default class ProvisionalEvidenceTile extends React.Component {
         });
 
         return (
-            <CollapsibleTile allEmpty={allEmpty} {...this.props}>
+            <CollapsibleTile allEmpty={trackEmptyRows.allEmpty} {...this.props}>
                 <div className="tile-disclaimer">
                     The ClinGen <a href="https://cspec.genome.network/cspec/ui/svi/affiliation/50087">
                         ENIGMA Variant Curation Expert Panel (VCEP) rules (Version 1.1.0, dated 2023-11-22)
